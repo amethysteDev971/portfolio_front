@@ -1,0 +1,14 @@
+/* height: 10px;
+        width: 100%;
+        background-color: black; */
+nav {
+    border-bottom: 10px solid #000000;
+}
+
+nav a {
+    /* color: #000000; */
+}
+
+nav a:hover {
+    color: #ffffff;
+}
