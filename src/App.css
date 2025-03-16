@@ -7,6 +7,14 @@
   text-align: center;
 }
 
+:root,
+html.dark {
+  /* Couleurs dark par défaut */
+  --bg-color: #242424;
+  --text-color: #ebebeb;
+  /* Ajoutez d'autres variables si besoin */
+}
+
 nav{
 
   /* height: 100px; 
@@ -28,6 +36,12 @@ nav{
   border: none;
   cursor: pointer;
   margin: 10px; */
+}
+
+.related-cover-wrapper img {
+  height: 24rem;           /* Hauteur fixe, par exemple 12rem (ajustez selon vos besoins) */
+  width: 100%;
+  object-fit: cover;       /* L'image recouvre le conteneur sans déformation */
 }
 
 .bg-purple-600 {

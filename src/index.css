@@ -11,6 +11,36 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --bg-color: #ffffff; /* Couleur de fond en mode clair */
+  --text-color: #000000; /* Couleur du texte en mode clair */
+}
+
+/* Quand l'élément racine (<html>) a la classe "dark", on remplace ces variables */
+html.dark {
+  --bg-color: #242424; /* Couleur de fond pour le dark mode */
+  --text-color: #ebebeb; /* Couleur du texte pour le dark mode */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Vous pouvez ensuite créer des classes utilitaires personnalisées si besoin */
+.bg-custom {
+  background-color: var(--bg-color);
+}
+
+.text-custom {
+  color: var(--text-color);
+}
+
+
+html, body, #root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 html, body {
