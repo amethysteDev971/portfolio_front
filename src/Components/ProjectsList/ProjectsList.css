@@ -1,0 +1,72 @@
+.circle {
+  height: 24px;
+  width: 24px;
+  border-radius: 24px;
+  background-color: black;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999999; /* so that it stays on top of all other elements */
+}
+
+.container_portolio {
+    position: relative; /* Pour que le ::before se positionne par rapport à ce container */
+    background-image: url('../img/plus.svg');
+    background-repeat: repeat;
+    background-size: 30px 30px;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 0;
+    z-index: 10;
+  }
+  
+.container_portolio::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(353deg, rgb(22, 2, 33) 0%, transparent 100%);
+    pointer-events: none; /* L'overlay n'interfère pas avec les interactions */
+    z-index: -1; /* Place l'overlay derrière le contenu du container */
+}
+
+a:hover {
+    color: aliceblue;
+}
+
+.container_portolio h3:hover {
+    color: #cfc1ec; /* Remplace par la couleur que tu souhaites */
+   transition: color 0.3s ease-in-out; /*  Optionnel : pour un effet de transition fluide */
+  }
+
+
+  .content {
+    position: relative;
+    z-index: 1; /* Contenu par-dessus le halo */
+  }
+  
+
+/* filter: hue-rotate(45deg); */
+ 
+
+.gradient_wapper{
+    /*background: #7F00FF;   fallback for old browsers */
+   /* background: -webkit-linear-gradient(to right, #E100FF, #7F00FF);   Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #E100FF, #30035d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+#main{
+    /* background-color: #9062c4; */
+}
+
+.title-custom_am{
+    background-color: #7c039e;
+    border: solid 1px #bfaac7;
+}
+
+h2.title-custom_am{
+    color: #e8e2ea;
+}

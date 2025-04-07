@@ -5,6 +5,7 @@
   margin: 0 auto;
   padding: 2rem; */
   text-align: center;
+  /* background-color: #A371DE; */
 }
 
 :root,
@@ -38,15 +39,11 @@ nav{
   margin: 10px; */
 }
 
-.related-cover-wrapper img {
-  height: 24rem;           /* Hauteur fixe, par exemple 12rem (ajustez selon vos besoins) */
-  width: 100%;
-  object-fit: cover;       /* L'image recouvre le conteneur sans déformation */
-}
 
 .bg-purple-600 {
   background-color: #411f68;
 }
+
 
 .logo {
   height: 6em;
@@ -83,3 +80,5 @@ nav{
 .read-the-docs {
   color: #888;
 }
+
+

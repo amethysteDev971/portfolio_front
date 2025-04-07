@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 60 60">
+  <!-- Generator: Adobe Illustrator 29.4.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 152)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #ededed;
+        fill-rule: evenodd;
+      }
+
+      .st1 {
+        opacity: .8;
+      }
+    </style>
+  </defs>
+  <g class="st1">
+    <path class="st0" d="M36,34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4ZM36,4V0h-2v4h-4v2h4v4h2v-4h4v-2h-4ZM6,34v-4h-2v4H0v2h4v4h2v-4h4v-2h-4ZM6,4V0h-2v4H0v2h4v4h2v-4h4v-2h-4Z"/>
+  </g>
+</svg>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
 import CoverPhoto from '../CoverPhoto/CoverPhoto';
+import './RelatedProjects.css';
 
 const RelatedProjects = ({ currentProjectId }) => {
   const [relatedProjects, setRelatedProjects] = useState([]);

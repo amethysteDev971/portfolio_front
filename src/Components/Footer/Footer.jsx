@@ -14,7 +14,7 @@ const Footer = () => {
           <a href="/" className="text-sm hover:underline">
             Accueil
           </a>
-          <a href="/about" className="text-sm hover:underline">
+          {/* <a href="/about" className="text-sm hover:underline">
             À propos
           </a>
           <a href="/services" className="text-sm hover:underline">
@@ -22,7 +22,7 @@ const Footer = () => {
           </a>
           <a href="/contact" className="text-sm hover:underline">
             Contact
-          </a>
+          </a> */}
         </div>
       </div>
     </footer>

@@ -24,7 +24,7 @@ const SectionDetail = ({ sectionEndpoint }) => {
     fetchSection();
   }, [sectionEndpoint]);
 
-  if (loading) return <p>Chargement de la section...</p>;
+  if (loading) return <p></p>;
   if (error) return <p>{error}</p>;
   if (!section) return <p>Section non trouvée.</p>;
 

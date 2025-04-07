@@ -1,106 +1,86 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Loading3D.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import gsap from 'gsap';
-import GUI from 'lil-gui';
+// import GUI from 'lil-gui'; // Debug GUI désactivé
+import { FontLoader } from 'three/examples/jsm/Addons.js';
+import { TextGeometry } from 'three/examples/jsm/Addons.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 let rendererGlobal = null;
 
 export default function Loading3D() {
   const mountRef = useRef(null);
-  const guiRef = useRef(null);
+  const sceneRef = useRef(null);
+  const [showScrollArrows, setShowScrollArrows] = useState(false);
+  const [modelLoaded, setModelLoaded] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+
+  // Crée une texture de dégradé pour le fond de la scène
+  const createGradientTexture = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#87CEEB');  // Bleu ciel
+    gradient.addColorStop(0.3, '#87CEEB');  // Bleu acier
+    gradient.addColorStop(0.7, '#87CEEB');
+    gradient.addColorStop(1, '#00008B');    // Bleu profond
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    return new THREE.CanvasTexture(canvas);
+  };
+
+  // Fonction de scroll vers le bas
+  function handleScrollDown() {
+    window.scrollBy({ top: 600, behavior: 'smooth' });
+  }
 
   useEffect(() => {
-    // Création unique de la GUI
-    if (!guiRef.current) {
-      guiRef.current = new GUI({ title: 'Debug', width: 300 });
-    }
-
-    // Gestion de la touche "h" pour basculer l'affichage du GUI
-    const handleKeyDown = (event) => {
-      if (event.key === 'h' && guiRef.current) {
-        // On vérifie la propriété display du domElement
-        if (guiRef.current.domElement.style.display === 'none') {
-          guiRef.current.show(); // Affiche la GUI
-          console.log('GUI affichée');
-        } else {
-          guiRef.current.hide(); // Masque la GUI
-          console.log('GUI masquée');
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    // Initialisation de la scène, de la caméra, etc.
-    const axesOrigin = { xInherit: -2.97, yInherit: 3.12, zInherit: -6.45 };
+    const axesOrigin = { xInherit: 1.4, yInherit: -0.75, zInherit: -32 };
     const debugObject = {};
-    const scene = new THREE.Scene();
-    // scene.background = new THREE.Color(0xEB4D55);
-    scene.background = new THREE.Color(0x87CEEB);
 
+    // Création de la scène
+    const scene = new THREE.Scene();
+    scene.background = createGradientTexture();
+    sceneRef.current = scene;
+
+    // Création de la caméra
     const camera = new THREE.PerspectiveCamera(
-      75,
+      45,
       window.innerWidth / 600,
       0.1,
-      1000
+      500
     );
     camera.position.set(
       axesOrigin.xInherit,
       axesOrigin.yInherit,
       axesOrigin.zInherit
     );
-    camera.lookAt(0, 0, 0);
     const clock = new THREE.Clock();
 
-    // Configuration de la GUI
-    const cameraTweaks = guiRef.current.addFolder('Caméra');
-    const objetTweaks = guiRef.current.addFolder('Objet');
-    cameraTweaks
-      .add(camera.position, 'x')
-      .min(-10)
-      .max(10)
-      .step(0.01)
-      .name('caméra x');
-    cameraTweaks
-      .add(camera.position, 'y')
-      .min(-10)
-      .max(10)
-      .step(0.01)
-      .name('caméra y');
-    cameraTweaks
-      .add(camera.position, 'z')
-      .min(-100)
-      .max(100)
-      .step(0.01)
-      .name('caméra z');
-
-    // Ajout d'un AxesHelper
-    const axesHelper = new THREE.AxesHelper(15);
-    scene.add(axesHelper);
-
-    // Création (ou récupération) du renderer unique
+    // Création du renderer
     if (!rendererGlobal) {
       rendererGlobal = new THREE.WebGLRenderer({ antialias: true });
       rendererGlobal.setSize(window.innerWidth, 600);
       rendererGlobal.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     }
+    // On force le canvas à être en position absolue et à avoir un z-index bas
     if (mountRef.current && !mountRef.current.contains(rendererGlobal.domElement)) {
       mountRef.current.appendChild(rendererGlobal.domElement);
+      rendererGlobal.domElement.style.position = 'absolute';
+      rendererGlobal.domElement.style.top = '0';
+      rendererGlobal.domElement.style.left = '0';
+      rendererGlobal.domElement.style.zIndex = '1';
     }
-    const renderer = rendererGlobal; // Pour simplifier
+    const renderer = rendererGlobal;
 
-    // Lumières
+    // Ajout des lumières
     const ambientLight = new THREE.AmbientLight(0xffffff, 2.7);
     scene.add(ambientLight);
-    const lightsTweaks = guiRef.current.addFolder('Lights');
-    lightsTweaks
-      .add(ambientLight, 'intensity')
-      .min(0)
-      .max(3)
-      .step(0.001);
 
     const directionalLight = new THREE.DirectionalLight(0x4cffff, 1.5);
     directionalLight.position.set(0, 10, 5);
@@ -115,35 +95,83 @@ export default function Loading3D() {
     pointLight.position.set(0, 3, -6.2);
     scene.add(pointLight);
 
-    // Chargement du modèle GLTF
+    // --- Utilisation de DRACOLoader pour alléger le modèle ---
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('/draco/'); // Les fichiers du décodeur doivent être dans public/draco/
     const loader = new GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
+
     loader.load(
-      'Island_project2_export.glb',
+      'Island_project2_export_compressed.glb', // Version compressée
       function (gltf) {
-        gltf.scene.scale.set(1.3, 1.3, 1.3);
-        gltf.scene.position.set(0, 0, 0);
-        gltf.scene.rotation.y = Math.PI;
-        scene.add(gltf.scene);
-        debugObject.spin = () => {
-          gsap.to(gltf.scene.rotation, {
+        // Simule un long temps de chargement : 5 secondes
+        setTimeout(() => {
+          gltf.scene.scale.set(3.3, 3.3, 3.3);
+          gltf.scene.position.set(0, -10, 0);
+          gltf.scene.rotation.y = Math.PI;
+          scene.add(gltf.scene);
+          camera.lookAt(gltf.scene.position);
+          debugObject.spin = () => {
+            gsap.to(gltf.scene.rotation, {
+              duration: 1,
+              y: gltf.scene.rotation.y + Math.PI,
+            });
+          };
+          if (window.innerWidth < 768) {
+            gsap.to(gltf.scene.position, {
+              duration: 1,
+              z: 8, // Ajuste selon tes besoins
+              x: 2,
+              ease: "power1.inOut"
+            });
+          }
+          setModelLoaded(true);
+
+          // Lance la transition du container dès que le modèle est chargé
+          gsap.to(mountRef.current, {
             duration: 1,
-            y: gltf.scene.rotation.y + Math.PI,
+            scale: 0.95,
+            y: 80,
+            borderRadius: "20px",
+            marginBottom: "90px",
+            backgroundColor: "#A371DE",
+            border: "8px solid white",
+            boxShadow: "0 10px 20px rgba(0, 0, 0, 0.3)",
+            ease: "elastic.out(1, 0.3)",
+            onComplete: () => setShowScrollArrows(true)
           });
-        };
-        objetTweaks.add(debugObject, 'spin').name('Spin');
+        }, 200);
       },
-      undefined,
+      function (xhr) {
+        if (xhr.total) {
+          const progress = (xhr.loaded / xhr.total) * 100;
+          setLoadingProgress(progress);
+        }
+      },
       function (error) {
         console.error('Erreur lors du chargement du modèle :', error);
       }
     );
+    // ----------------------------------------------------
 
-    // Contrôles de la caméra
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.enableZoom = false; // Désactive le zoom via la molette
+    controls.enableZoom = false;
+    const distance = camera.position.distanceTo(controls.target);
+    controls.minDistance = distance;
+    controls.maxDistance = distance;
+    controls.minPolarAngle = Math.PI / 2.25;
+    controls.maxPolarAngle = Math.PI / 2;
 
-    // Animation
+    // Lancement de l'animation de la caméra (peut être lancée dès maintenant)
+    gsap.to(camera.position, {
+      duration: 5,
+      x: 5.2,
+      ease: 'power1.inOut',
+      repeat: -1,
+      yoyo: true,
+    });
+
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
@@ -151,16 +179,6 @@ export default function Loading3D() {
     };
     animate();
 
-    debugObject.traveling = () => {
-      if (camera.position.x < 5.2) {
-        gsap.to(camera.position, { duration: 1, x: 5.2 });
-      } else {
-        gsap.to(camera.position, { duration: 1, x: axesOrigin.xInherit });
-      }
-    };
-    cameraTweaks.add(debugObject, 'traveling').name('Traveling');
-
-    // Gestion du redimensionnement
     const handleResize = () => {
       camera.aspect = window.innerWidth / 600;
       camera.updateProjectionMatrix();
@@ -169,22 +187,119 @@ export default function Loading3D() {
     };
     window.addEventListener('resize', handleResize);
 
-    // Cleanup
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('resize', handleResize);
-      if (process.env.NODE_ENV !== 'development' && mountRef.current && mountRef.current.contains(renderer.domElement)) {
+      if (
+        process.env.NODE_ENV !== 'development' &&
+        mountRef.current &&
+        mountRef.current.contains(renderer.domElement)
+      ) {
         mountRef.current.removeChild(renderer.domElement);
         renderer.dispose();
         rendererGlobal = null;
       }
       controls.dispose();
-      if (guiRef.current) {
-        guiRef.current.destroy();
-        guiRef.current = null;
-      }
     };
   }, []);
 
-  return <div className='webgl' ref={mountRef} style={{ width: '100vw', height: '600px' }} />;
+  // Ajout du texte "PORTFOLIO" uniquement après que le modèle soit chargé
+  useEffect(() => {
+    if (modelLoaded && sceneRef.current) {
+      const fontLoader = new FontLoader();
+      fontLoader.load('fonts/Righteous/Righteous_Regular.json', (font) => {
+        const textGeometry = new TextGeometry('PORTFOLIO', {
+          font: font,
+          size: 2.5,
+          depth: 1.15,
+          curveSegments: 12,
+          bevelEnabled: true,
+          bevelThickness: 0.03,
+          bevelSize: 0.02,
+          bevelOffset: 0,
+          bevelSegments: 5,
+        });
+        const textMaterial = new THREE.MeshStandardMaterial({ color: 0xfffff0 });
+        const text = new THREE.Mesh(textGeometry, textMaterial);
+        text.position.set(10, -1.9, -2);
+        text.rotateY(Math.PI - 0.125);
+        sceneRef.current.add(text);
+
+        // Sur mobile, anime le texte pour qu'il se déplace (pour être entièrement visible)
+        if (window.innerWidth < 768) {
+          gsap.to(text.position, {
+            duration: 1,
+            z: 8,
+            x: '-=0.8',
+            ease: "power1.inOut"
+          });
+        }
+      });
+    }
+  }, [modelLoaded]);
+
+  // Animation des flèches : timeline en boucle
+  useEffect(() => {
+    let tl;
+    if (showScrollArrows) {
+      tl = gsap.timeline({ repeat: -1 });
+      tl.fromTo(
+        ".scroll-down .arrow",
+        { opacity: 0, y: -10 },
+        { opacity: 1, y: 10, duration: 0.8, ease: "bounce.out", stagger: 0.1 }
+      )
+        .to(
+          ".scroll-down .arrow",
+          { y: 0, duration: 0.4, ease: "power1.inOut", stagger: 0.1 },
+          "+=0.2"
+        )
+        .to(
+          ".scroll-down .arrow",
+          { opacity: 0, duration: 0.4, ease: "power1.out", stagger: 0.1 },
+          "+=0.2"
+        );
+    }
+    return () => {
+      if (tl) tl.kill();
+    };
+  }, [showScrollArrows]);
+
+  return (
+    <div className="webgl" ref={mountRef} style={{ width: '100vw', height: '600px' }}>
+      {/* Barre de progression avec pourcentage affiché tant que le modèle n'est pas chargé */}
+      {!modelLoaded && (
+        <div className="loading-gauge">
+          <div className="loading-bar" style={{ width: `${loadingProgress}%` }}></div>
+          <div className="loading-text">{loadingProgress.toFixed(0)}%</div>
+        </div>
+      )}
+      {showScrollArrows && (
+        <div className="scroll-down" onClick={handleScrollDown}>
+          <div className="arrow arrow-top">
+            <svg
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7 7 7-7"/>
+            </svg>
+          </div>
+          <div className="arrow arrow-bottom">
+            <svg
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path style={{ transform: 'translateY(-12px)' }} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7 7 7-7"/>
+            </svg>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function handleScrollDown() {
+  window.scrollBy({ top: 600, behavior: 'smooth' });
 }

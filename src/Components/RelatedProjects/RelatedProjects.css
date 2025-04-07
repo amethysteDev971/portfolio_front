@@ -1,0 +1,23 @@
+/* .related-cover-wrapper img { */
+   /* height: 24rem;            Hauteur fixe, par exemple 12rem (ajustez selon vos besoins) */
+    /* width: 100%; */
+   /* object-fit: cover;        L'image recouvre le conteneur sans déformation */
+  /* } */
+
+  .related-cover-wrapper {
+    width: 100%;
+    position: relative;
+    padding-top: 56.25%; /* Pour un ratio 16:9 (9/16 = 0.5625 = 56.25%) */
+    overflow: hidden;
+  }
+  
+  .related-cover-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  

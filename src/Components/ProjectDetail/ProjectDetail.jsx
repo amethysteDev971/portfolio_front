@@ -26,7 +26,7 @@ const ProjectDetail = () => {
     fetchProject();
   }, [id]);
 
-  if (loading) return <p className="text-center">Chargement du projet...</p>;
+  if (loading) return <p className="text-center"></p>;
   if (error) return <p className="text-center">{error}</p>;
   if (!project) return <p className="text-center">Projet non trouvé.</p>;
 
@@ -37,7 +37,7 @@ const ProjectDetail = () => {
 
       {project.sections && Array.isArray(project.sections) && project.sections.length > 0 && (
         <div>
-          <h3 className="text-xl font-bold mb-4 text-left">Sections</h3>
+          {/* <h3 className="text-xl font-bold mb-4 text-left">Sections</h3> */}
           {project.sections.map((sectionEndpoint, idx) => (
             <SectionDetail key={idx} sectionEndpoint={sectionEndpoint} />
           ))}

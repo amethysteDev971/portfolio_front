@@ -9,4 +9,78 @@
     top: 0;
     left: 0;
     outline: none;
+    border-radius: 0px; /* Ajuste la valeur selon tes besoins */
+    overflow: hidden;    /* Permet de masquer les parties du contenu qui débordent */
+    /* background: linear-gradient(to right, #E100FF, #30035d); */
+    /*transition: all 1s ease-in-out;  Optionnel pour d'autres transitions CSS */
+    /* transition: all 0.05s ease-in-out; */
+    position: relative;
+    z-index: 1000;
 }
+
+/* Barre de progression */
+.loading-gauge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 400px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 10000;
+  text-align: center;
+  font-family: sans-serif;
+  color: #A371DE;
+  font-weight: bold;
+}
+
+.loading-bar {
+  height: 100%;
+  background: #A371DE;
+  width: 0%;
+  transition: width 0.3s ease-in-out;
+}
+
+.loading-text {
+  position: absolute;
+  width: 100%;
+  /* top: 100%; */
+  bottom: -4px;
+  left: 0;
+  font-size: 1.2rem;         /* Augmente la taille si besoin */
+  margin-top: 5px;
+  text-align: center;
+  color: #361a4c;          /* Couleur contrastée */
+  z-index: 10001;          /* S'assurer qu'il soit au-dessus */
+}
+
+/* Par défaut, on cache le conteneur des flèches */
+.scroll-down {
+    display: none;
+  }
+  
+/* Affichage des flèches uniquement sur mobile/tablette */
+@media (max-width: 1024px) {
+    .scroll-down {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      top: 10px;  /* Positionné à 10px du haut du container */
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      /* La hauteur ici s'adapte au contenu */
+      gap: 0.2rem;  /* Réduit l'espace entre les flèches */
+      pointer-events: auto;
+      z-index: 9999;
+    }
+    .arrow svg {
+      width: 3.5rem;
+      height: 3.5rem;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    }
+  }

@@ -1,0 +1,46 @@
+.wrapper-txt-hue_ad{
+    display: grid;
+    place-items: center;
+    background: hsl(268.77deg 54.07% 26.47%);
+} 
+
+.txt-hue_ad{
+    position: relative;
+}
+.txt-hue_ad, .txt-hue_ad::after{
+    margin: 0;
+    /* font-size: clamp(2rem, 1rem + 3vw, 12rem); */
+    background: linear-gradient(90deg in lch longer hue, oklch(105% 90% 0) 0 0);
+    /*   background: linear-gradient(90deg in hsl longer hue, hsl(0 100% 70%) 0 0); */
+    background-size: 500% 100%;
+    animation: blend 30s infinite linear;
+    color: transparent;
+    background-clip: text;
+}
+
+.txt-hue_ad::after{
+    content: 'FullStack';
+    filter: blur(8px);
+    /* padding-left: 40px; */
+    position: absolute;
+    /*   z-index: -1; */
+    left: 0;
+    mix-blend-mode: plus-lighter;
+}
+
+header::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(353deg, rgb(150, 17, 222) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+    height: 690px;
+}
+
+@keyframes blend {
+    to { background-position: 500% 100%; }
+}
