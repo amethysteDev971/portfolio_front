@@ -12,7 +12,7 @@ const Home = () => (
     </header>
     <ScrollingBanner />
     <section className="bg-purple-600 p-6">
-      <div className="wrapper-txt-hue_ad mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-[920px]">
+      <div className="max-w-[1440px] wrapper-txt-hue_ad mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-[920px]">
         <h1 className="pt-10 pb-5"><span className="font-light">Développeuse </span><span className="txt-hue_ad">FullStack</span> <span className="font-light">& <br/>Designer Créative</span></h1>
         <h2 className="pb-6 font-bold">
           ..Un espace où créativité et technologie se rencontrent. 

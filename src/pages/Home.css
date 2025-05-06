@@ -1,5 +1,5 @@
 .wrapper-txt-hue_ad{
-    display: grid;
+    /* display: grid; */
     place-items: center;
     background: hsl(268.77deg 54.07% 26.47%);
 } 
@@ -27,6 +27,11 @@
     left: 0;
     mix-blend-mode: plus-lighter;
 }
+
+header {
+    position: relative;
+    width: 100%;
+  }
 
 header::after{
     content: '';

@@ -9,23 +9,28 @@ const CoverPhoto = ({ endpoint, altText }) => {
       try {
         const response = await axiosInstance.get(endpoint);
         console.log('Réponse de CoverPhoto:', response.data);
-        const API_URL = import.meta.env.VITE_API_URL;
+        const urlFromApi = response.data.url; // votre champ `url` exposé par le getter getUrl()
         let fullUrl = '';
 
-        if (response.data.imageName && response.data.imageName.trim() !== '') {
-          console.log('imageName trouvé:', response.data.imageName);
-          const userId = response.data.user ? response.data.user.split('/').pop() : '';
-          fullUrl = `${API_URL}/uploads/photos/${userId}/${response.data.imageName}`;
-          console.log('URL construite avec imageName:', fullUrl);
-        } else {
-          console.error('Impossible de construire l\'URL de l\'image. Réponse:', response.data);
+        // 1) URL absolue
+        if (urlFromApi.startsWith('http://') || urlFromApi.startsWith('https://')) {
+          fullUrl = urlFromApi;
+        }
+        // 2) Chemin relatif commençant par slash
+        else if (urlFromApi.startsWith('/')) {
+          const API_URL = import.meta.env.VITE_API_URL.replace(/\/$/, '');
+          fullUrl = `${API_URL}${urlFromApi}`;
+        }
+        // 3) Chemin sans slash initial (par sécurité)
+        else {
+          const API_URL = import.meta.env.VITE_API_URL.replace(/\/$/, '');
+          fullUrl = `${API_URL}/${urlFromApi}`;
         }
 
-        if (fullUrl) {
-          setPhotoUrl(fullUrl);
-        }
+        console.log('URL finale de l’image de couverture :', fullUrl);
+        setPhotoUrl(fullUrl);
       } catch (err) {
-        console.error('Erreur lors du chargement de la photo:', err);
+        console.error('Erreur lors du chargement de la photo :', err);
       }
     };
 

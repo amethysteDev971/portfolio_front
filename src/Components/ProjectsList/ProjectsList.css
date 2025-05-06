@@ -58,15 +58,16 @@ a:hover {
     background: linear-gradient(to right, #E100FF, #30035d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
-#main{
-    /* background-color: #9062c4; */
-}
-
 .title-custom_am{
-    background-color: #7c039e;
-    border: solid 1px #bfaac7;
+  background-color: #7c039e;
+  border: solid 1px #bfaac7;
 }
 
 h2.title-custom_am{
-    color: #e8e2ea;
+  color: #e8e2ea;
+}
+
+.projects_container{
+  /* max-width: 1440px; */
+  /* padding: 0 64px 0 64px; */
 }

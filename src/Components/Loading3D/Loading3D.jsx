@@ -180,9 +180,11 @@ export default function Loading3D() {
     animate();
 
     const handleResize = () => {
+      const width = mountRef.current.clientWidth;
+      const height = mountRef.current.clientHeight;
       camera.aspect = window.innerWidth / 600;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, 600);
+      renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     };
     window.addEventListener('resize', handleResize);
@@ -264,7 +266,7 @@ export default function Loading3D() {
   }, [showScrollArrows]);
 
   return (
-    <div className="webgl" ref={mountRef} style={{ width: '100vw', height: '600px' }}>
+    <div className="webgl" ref={mountRef} style={{ height: '600px' }}>
       {/* Barre de progression avec pourcentage affiché tant que le modèle n'est pas chargé */}
       {!modelLoaded && (
         <div className="loading-gauge">
@@ -300,6 +302,6 @@ export default function Loading3D() {
   );
 }
 
-function handleScrollDown() {
-  window.scrollBy({ top: 600, behavior: 'smooth' });
-}
+// function handleScrollDown() {
+//   window.scrollBy({ top: 600, behavior: 'smooth' });
+// }
