@@ -65,7 +65,12 @@ export default function Loading3D() {
     // Création du renderer
     if (!rendererGlobal) {
       rendererGlobal = new THREE.WebGLRenderer({ antialias: true });
-      rendererGlobal.setSize(window.innerWidth, 600);
+      const width  = mountRef.current.clientWidth;
+      const height = mountRef.current.clientHeight;
+
+      rendererGlobal.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
       rendererGlobal.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     }
     // On force le canvas à être en position absolue et à avoir un z-index bas
@@ -162,6 +167,12 @@ export default function Loading3D() {
     controls.maxDistance = distance;
     controls.minPolarAngle = Math.PI / 2.25;
     controls.maxPolarAngle = Math.PI / 2;
+    if (window.innerWidth < 768) {
+      controls.enabled = false;
+    }else {
+      controls.enabled = true;
+    }
+    
 
     // Lancement de l'animation de la caméra (peut être lancée dès maintenant)
     gsap.to(camera.position, {
@@ -182,7 +193,7 @@ export default function Loading3D() {
     const handleResize = () => {
       const width = mountRef.current.clientWidth;
       const height = mountRef.current.clientHeight;
-      camera.aspect = window.innerWidth / 600;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -266,7 +277,7 @@ export default function Loading3D() {
   }, [showScrollArrows]);
 
   return (
-    <div className="webgl" ref={mountRef} style={{ height: '600px' }}>
+    <div className="webgl" ref={mountRef}>
       {/* Barre de progression avec pourcentage affiché tant que le modèle n'est pas chargé */}
       {!modelLoaded && (
         <div className="loading-gauge">

@@ -17,7 +17,24 @@
     position: relative;
     z-index: 1000;
     width: 100%;
+    height: 600px;
 }
+/* ========== MOBILE (≤767px) ========== */
+@media (max-width: 767px) {
+  .webgl {
+    height: 400px !important;      /* hauteur plus petite */
+  }
+  .webgl canvas {
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none;          /* désactive toutes les interactions tactiles */
+  }
+  
+  header::after {
+    height: 500px !important;
+  }
+}
+
 
 /* Barre de progression */
 .loading-gauge {

@@ -51,10 +51,10 @@ const ProjectsList = () => {
         <div className="content pt-6 pb-9">
           <h2 className="bg-purple-400 p-4 text-2xl font-bold mb-4 inline-block title-custom_am">Projets</h2>
           <div className="projects_container max-w-[1440px] pt-6 relative mx-auto">
-            <div className="projects_grid grid gap-8 grid-cols-[repeat(auto-fit,minmax(416px,1fr))] justify-center">
+          <div className="projects_grid grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {projects.map(project => (
                 <Link key={project.id} to={`/projets/${project.id}`} className="block">
-                  <div className="cursor-pointer">
+                  <div className="cursor-pointer overflow-hidden">
                     {project.coverPhoto && (
                       <CoverPhoto endpoint={project.coverPhoto} altText={project.title} />
                     )}
